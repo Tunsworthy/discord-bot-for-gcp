@@ -49,17 +49,22 @@ client.on("message", async (message) => {
         "You can also type `!server status` to get the current status of the server"
       );
     }
+    await getListOfVMs();
+
+    const [vms] = await compute.getVMs({ maxResults: 3 });
+    const status = vms[0].metadata.status;
 
     if (code.toLowerCase() == "status") {
-      const [vms] = await compute.getVMs({ maxResults: 3 });
-      const status = vms[0].metadata.status;
 
-      message.channel.send("serverInstance is currently: **" + status + "**");
+      const paperInstance = vms[0];
+
+      const ip = paperInstance.metadata.networkInterfaces[0].accessConfigs[0].natIP;
+      message.channel.send("serverInstance is currently: **" + status + "** IP: **" + ip + "**");
     }
 
     if (code.toLowerCase() == "start") {
+
       if (statusServerInstance == "RUNNING") {
-        const [vms] = await compute.getVMs({ maxResults: 3 });
         const paperInstance = vms[0];
         const sshCommand =
           'gcloud beta compute ssh --zone "YOUR_ZONE" "serverInstance" --project "YOUR_GCP_PROJECT_NAME"';
