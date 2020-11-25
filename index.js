@@ -15,6 +15,7 @@ const compute = new Compute({
 let serverInstance;
 let metadataServerInstance;
 let statusServerInstance;
+let defaultchannel = "711773120330989620"
 
 // Fetch VMs from GCP, async
 async function getListOfVMs() {
@@ -27,11 +28,24 @@ async function getListOfVMs() {
   statusServerInstance = metadataServerInstance.status;
 }
 
-// When the bot gets ready
-client.once("ready", async () => {
-  await getListOfVMs();
-  console.log("The bot is ready now");
-});
+//functions
+const gcp = require('./modules/functions/gcp.js')
+const discord1 = require('./modules/functions/discord.js')
+//const discord = require('./modules/functions/discord.js')
+
+
+
+async function load(){
+  let start = await discord1.ConnectDiscord();
+  console.log("Bot Started")
+//discord1.sendMessage("Bot has started")
+//gcp.startserver("minecraftftb1-2")
+}
+
+load()
+
+
+
 
 // Listen for messages
 client.on("message", async (message) => {
@@ -49,11 +63,40 @@ client.on("message", async (message) => {
         "You can also type `!server status` to get the current status of the server"
       );
     }
+
+   let codelower = code.toLowerCase()
+
+   if(codelower == "list"){
+    const output = await gcp.getserverslist();
+    message.channel.send(output);
+   }
+
+   if(codelower == "status"){
+    const servername =
+      userMessage.split(" ")[2] == null ? "" : userMessage.split(" ")[2].trim();
+    const output = await gcp.getserversstatus(servername);
+    console.log(output)
+    message.channel.send(output);
+
+   }
+   if(codelower == "start2"){
+    const servername =
+      userMessage.split(" ")[2] == null ? "" : userMessage.split(" ")[2].trim();
+    const output = await gcp.startserver(servername);
+    console.log(output)
+    message.channel.send(output);
+
+   }
+
+
+
+
     await getListOfVMs();
 
     const [vms] = await compute.getVMs({ maxResults: 3 });
     const status = vms[0].metadata.status;
 
+    
     if (code.toLowerCase() == "status") {
 
       const paperInstance = vms[0];
