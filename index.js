@@ -39,12 +39,8 @@ async function load(){
   let start = await discord1.ConnectDiscord();
   console.log("Bot Started")
 //discord1.sendMessage("Bot has started")
-//gcp.startserver("minecraftftb1-2")
+//gcp.serveraction("minecraftftb1","start")
 }
-
-load()
-
-
 
 
 // Listen for messages
@@ -68,7 +64,8 @@ client.on("message", async (message) => {
 
    if(codelower == "list"){
     const output = await gcp.getserverslist();
-    message.channel.send(output);
+    discord1.sendMessage(output,userMessage.channel_id)
+    //message.channel.send(output);
    }
 
    if(codelower == "status"){
@@ -76,73 +73,22 @@ client.on("message", async (message) => {
       userMessage.split(" ")[2] == null ? "" : userMessage.split(" ")[2].trim();
     const output = await gcp.getserversstatus(servername);
     console.log(output)
-    message.channel.send(output);
+    discord1.sendMessage(output,userMessage.channel_id)
+    //message.channel.send(output);
 
    }
-   if(codelower == "start2"){
+   if(codelower == "start" || codelower == "stop"){
     const servername =
       userMessage.split(" ")[2] == null ? "" : userMessage.split(" ")[2].trim();
-    const output = await gcp.startserver(servername);
+    const output = await gcp.serveraction(servername,codelower);
     console.log(output)
-    message.channel.send(output);
+   // message.channel.send(output);
 
    }
-
-
-
-
-    await getListOfVMs();
-
-    const [vms] = await compute.getVMs({ maxResults: 3 });
-    const status = vms[0].metadata.status;
-
-    
-    if (code.toLowerCase() == "status") {
-
-      const paperInstance = vms[0];
-
-      const ip = paperInstance.metadata.networkInterfaces[0].accessConfigs[0].natIP;
-      message.channel.send("serverInstance is currently: **" + status + "** IP: **" + ip + "**");
-    }
-
-    if (code.toLowerCase() == "start") {
-
-      if (statusServerInstance == "RUNNING") {
-        const paperInstance = vms[0];
-        const sshCommand =
-          'gcloud beta compute ssh --zone "YOUR_ZONE" "serverInstance" --project "YOUR_GCP_PROJECT_NAME"';
-
-        const ip =
-          paperInstance.metadata.networkInterfaces[0].accessConfigs[0].natIP;
-        message.channel.send("serverInstance running on IP: **" + ip + "**");
-        message.channel.send("SSH Command: `" + sshCommand + "`");
-      }
-      if (statusServerInstance == "TERMINATED") {
-        serverInstance.start().then(async (data) => {
-          message.channel.send(
-            "Provisioning the serverInstance. Run **`!server start`** after a few seconds to get the IP Address."
-          );
-          message.channel.send(
-            "You can also type `!server status` to get the current status of the server"
-          );
-          statusServerInstance = "RUNNING";
-        });
-      }
-    }
-
-    if (code.toLowerCase() == "stop") {
-      if (statusServerInstance == "RUNNING") {
-        serverInstance.stop().then((data) => {
-          message.channel.send("Server stopped");
-        });
-      }
-      if (statusServerInstance == "TERMINATED") {
-        message.channel.send("Server was already stopped");
-      }
-      statusServerInstance = "TERMINATED";
-    }
   }
 });
 
 // Login
 client.login(discordConfig.token);
+
+load()
