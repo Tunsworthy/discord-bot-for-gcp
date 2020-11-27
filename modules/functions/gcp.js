@@ -14,8 +14,6 @@ let statusServerInstance;
 
 //load custom discord functions
 const discord = require('./discord.js')
-//var head = `☀️Air Quility ${time}☁️\n`
-//var body = ""
 
 function delay(t, v) {
    return new Promise(function(resolve) { 
@@ -74,15 +72,12 @@ serveraction: async function(servername,action,resolve,reject){
 	var getProperty = function (propertyName) {
     	return statusobj[propertyName];
 	};
-	//console.log(getProperty(action))
-//get the current server status details
+
 	let statusdetails = await module.exports.getserversstatus(servername)
-//console.log(statusdetails.vm )
-//Check if server is in desired start - if so respond with status
+
 if(statusdetails.vm.metadata.status === getProperty(action)){
 	console.log("Server is already in desired state")
-	//let statusmessage = await module.exports.getserversstatus(servername)
-	//console.log(statusdetails)
+
 	return Promise.resolve(discord.sendMessage(statusdetails.message))
 }
 
@@ -92,51 +87,7 @@ else{
 	let [vm,operation] = await statusdetails.vm[action]()
 	discord.sendMessage("command received by GCP - confirmation of Server Satus will be sent shortly... Dave...")
 	module.exports.checkoperation(servername,getProperty(action))
-	//console.log(`Polling operation ${operation.id}...`);
-	//console.log(operation)
-   // module.exports.checkoperation(servername,getProperty(action))
-   //operation = compute.operation(operation.id)
-    //console.log(operation)
-  // let opstatus =  await operation.promise();
-  // console.log(opstatus)
-	//discord.sendMessage("command received by GCP - confirmation of Server Satus will be sent shortly... Dave...")
-	//var operation = compute.operation(operationdetails.id);
-	// console.log('Acquiring VM metadata...');
-  //  const [metadata] = await vm.getMetadata();
-
-	//console.log(operation)
-
-  		//let statusreturn = await module.exports.getserversstatus
-		//console.log(discord.sendMessage(statusreturn.message))
-			//send to function to check completion
-		}
-/*
-    	})
-      })
-    )
 	}
-*/
-},
-
-startserveripmessage: function(servername){
-	return new Promise((resolve,reject) => module.exports.getserversstatus(servername)
-	.then(response => {
-		console.log("looking for server ip" + response)
-
-		if(response.split(" - - ")[1] === "RUNNING"){
-			console.log(response + "RUNNING")
-			resolve(discord.sendMessage(response))
-			//resolve()
-		}
-		else{console.log("running again")
-			return delay(3000).then(function() {
-				module.exports.startserveripmessage(servername).then(resolve)
-			})
-			
-		}
-	})
-	)
-
 },
 
 checkoperation: function(servername,detect){
