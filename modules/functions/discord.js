@@ -19,7 +19,7 @@ ConnectDiscord: async function(resolve){
 sendMessage: async function(message,channelid){
 //let client = await module.exports.ConnectDiscord
 //console.log(client)
- console.log("called send message" + defaultchannel + message)
+ //console.log("called send message" + defaultchannel + message)
  //sends message to channel, if not channel is defined it will use the default chan definied in the vars.
    if(typeof channelid === "undefined"){
     var channelid = defaultchannel
@@ -34,7 +34,7 @@ sendMessage: async function(message,channelid){
   		//console.log(channel)
   	}
   	//console.log("message sent" + message)
-   await channel.send(message)
+   console.log(await channel.send(message))
 	//const channel = client.channels.fetch(channelid).send(message);
 	//console.log(channel.send("test message"));
 	//console.log(await channel.send(message));
