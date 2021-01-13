@@ -26,7 +26,7 @@ sendMessage: async function(message,channelid){
    }
 
   	let channel = await client.channels.cache.get(channelid)
-  	console.log(channel)
+  	//console.log(channel)
   	if(typeof channel === "undefined"){
   		let connect = await module.exports.ConnectDiscord()
   		//console.log(connect)
