@@ -45,9 +45,9 @@ async function load(){
 
 // Listen for messages
 client.on("message", async (message) => {
-  console.log("user message" + userMessage)
+  
   const userMessage = message.content;
-
+  console.log("user message" + userMessage)
   if (userMessage.startsWith("!server")) {
     const code =
       userMessage.split(" ")[1] == null ? "" : userMessage.split(" ")[1].trim();
