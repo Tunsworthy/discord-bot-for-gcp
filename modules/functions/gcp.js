@@ -83,9 +83,13 @@ if(statusdetails.vm.metadata.status === getProperty(action)){
 
 //if the state doesn't match
 else{
-
-	let [vm,operation] = await statusdetails.vm[action]()
-	discord.sendMessage("command received by GCP - confirmation of Server Satus will be sent shortly... Dave...")
+	try{
+			let [vm,operation] = await statusdetails.vm[action]()
+	}
+	catch(err){
+		discord.sendMessage("There was an error " + err)
+	}
+	discord.sendMessage("command received by GCP - confirmation of Server status will be sent shortly... Dave...")
 	module.exports.checkoperation(servername,getProperty(action))
 	}
 },
