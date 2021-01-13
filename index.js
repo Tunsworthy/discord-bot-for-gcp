@@ -62,7 +62,7 @@ client.on("message", async (message) => {
     match = 1;
     const output = await gcp.getserverslist();
     discord1.sendMessage(output,userMessage.channel_id)
-    //message.channel.send(output);
+    
    }
 
    if(codelower == "status"){
