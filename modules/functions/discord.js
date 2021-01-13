@@ -34,7 +34,7 @@ sendMessage: async function(message,channelid){
   		//console.log(channel)
   	}
   	//console.log("message sent" + message)
-   console.log(await channel.send(message))
+   console.log(await channel.send(message).catch(console.log("error message")))
 	//const channel = client.channels.fetch(channelid).send(message);
 	//console.log(channel.send("test message"));
 	//console.log(await channel.send(message));
