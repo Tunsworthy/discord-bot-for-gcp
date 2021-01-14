@@ -45,7 +45,7 @@ async function load(){
 
 // Listen for messages
 client.on("message", async (message) => {
-  
+
   const userMessage = message.content;
   console.log("user message" + userMessage)
   if (userMessage.startsWith("!server")) {
@@ -53,41 +53,29 @@ client.on("message", async (message) => {
       userMessage.split(" ")[1] == null ? "" : userMessage.split(" ")[1].trim();
 
     if (code.length == 0 || code == null || code == "") {
-      discord1.sendMessage("I think you've missed something",userMessage.channel_id)
+      discord1.sendMessage("I think you've missed something", userMessage.channel_id)
     }
 
-   let codelower = code.toLowerCase()
-   let match = 0
-   if(codelower == "list"){
-    match = 1;
-    const output = await gcp.getserverslist();
-    discord1.sendMessage(output,userMessage.channel_id)
-    
-   }
-
-   if(codelower == "status"){
-    match = 1;
+    let codelower = code.toLowerCase()
+    let output;
     const servername =
-      userMessage.split(" ")[2] == null ? "" : userMessage.split(" ")[2].trim();
-    const output = await gcp.getserversstatus(servername);
-    console.log(output)
-    discord1.sendMessage(output,userMessage.channel_id)
-    //message.channel.send(output);
-
-   }
-   if(codelower == "start" || codelower == "stop"){
-    match = 1;
-    const servername =
-      userMessage.split(" ")[2] == null ? "" : userMessage.split(" ")[2].trim();
-    const output = await gcp.serveraction(servername,codelower);
-    console.log(output)
-   // message.channel.send(output);
-
-   } 
-   if(match === 0){
-    discord1.sendMessage("Couldn't find an action that meets your request...try again later.",userMessage.channel_id)
-   }
-
+    userMessage.split(" ")[2] == null ? "" : userMessage.split(" ")[2].trim();
+    switch(codelower) {
+      case "list":
+        output = await gcp.getserverslist();
+        discord1.sendMessage(output, userMessage.channel_id)
+        break;
+      case "status":
+        output = await gcp.getserversstatus(servername);
+        discord1.sendMessage(output, userMessage.channel_id)
+        break;
+      case "start":
+      case "stop":
+        output = await gcp.serveraction(servername, codelower);
+        break;
+      default:
+        discord1.sendMessage("Couldn't find an action that meets your request...try again later.", userMessage.channel_id)
+    }
   }
 });
 
